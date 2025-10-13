@@ -22,26 +22,22 @@ public:
         }
     }
 
-    // Load shader from files
     void loadShader(const char* vertexPath, const char* fragmentPath) {
         if (shader) {
             shader->CreateFromFiles(vertexPath, fragmentPath);
         }
     }
 
-    // Load texture from file
     bool loadTexture(const char* texturePath, bool flipV = false) {
         stbi_set_flip_vertically_on_load(flipV);
         glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_2D, textureID);
         
-        // Set texture parameters
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        // Load image
         int width, height, nrChannels;
         
         
@@ -52,7 +48,6 @@ public:
             return false;
         }
 
-        // Determine format
         GLenum format = GL_RGB;
         if (nrChannels == 1) format = GL_RED;
         else if (nrChannels == 3) format = GL_RGB;
@@ -80,12 +75,10 @@ public:
         this->textureLoaded = true;
     }
 
-    // Enable alpha transparency manually
     void enableAlpha(bool enable = true) {
         hasAlphaTransparency = enable;
     }
 
-    // Check if material has alpha transparency
     bool hasAlpha() const {
         return hasAlphaTransparency;
     }

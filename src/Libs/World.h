@@ -71,7 +71,6 @@ public:
     }
 
     glm::mat4 getModelMatrix(int index) const {
-        // if (index < 0 || index >= modelMatrices.size()) return glm::mat4(1.0f);
         return modelMatrices[index];
     }
 

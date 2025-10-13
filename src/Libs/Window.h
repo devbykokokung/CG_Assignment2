@@ -25,10 +25,8 @@ class Window
 
         void waitClose() { while (!glfwWindowShouldClose(mainWindow)) { glfwPollEvents(); } }
 
-        // Keyboard input
         bool* getKeys() { return keys; }
         
-        // Mouse input
         GLfloat getXChange();
         GLfloat getYChange();
         bool isMouseButtonPressed(int button);
@@ -39,7 +37,6 @@ class Window
         GLint width, height;
         GLint bufferWidth, bufferHeight;
 
-        // Input handling
         bool keys[1024];
         GLfloat lastX;
         GLfloat lastY;

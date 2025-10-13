@@ -19,7 +19,6 @@ public:
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Get lighting from world (use first light if available)
         glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
         
@@ -31,7 +30,6 @@ public:
             }
         }
 
-        // Render all objects in world
         for (int i = 0; i < world->getMeshCount(); i++)
         {
             Object* obj = world->getObject(i);
@@ -43,16 +41,13 @@ public:
             Shader* shader = material->getShader();
             if (!shader) continue;
 
-            // Enable alpha blending if material has transparency
             if (material->hasAlpha()) {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
 
-            // Use shader
             shader->UseShader();
 
-            // Get uniform locations
             GLuint uniformModel = shader->GetUniformLocation("model");
             GLuint uniformView = shader->GetUniformLocation("view");
             GLuint uniformProjection = shader->GetUniformLocation("projection");
@@ -61,36 +56,30 @@ public:
             GLuint uniformLightPos = shader->GetUniformLocation("lightPos");
             GLuint uniformViewPos = shader->GetUniformLocation("viewPos");
 
-            // Set view and projection matrices
             glm::mat4 view = camera->getViewMatrix();
             glm::mat4 proj = projection->getProjectionMatrix();
             glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(view));
             glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(proj));
 
-            // Set model matrix
             glm::mat4 model = world->getModelMatrix(i);
             glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
-            // Set lighting uniforms
             glUniform3fv(uniformLightColour, 1, glm::value_ptr(lightColour));
             glUniform3fv(uniformLightPos, 1, glm::value_ptr(lightPos));
             glm::vec3 cameraPos = camera->getPosition();
             glUniform3fv(uniformViewPos, 1, glm::value_ptr(cameraPos));
 
-            // Set texture from material
             if (material->hasTexture()) {
                 glUniform1i(uniformTexture1, 0);
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, material->getTexture());
             }
 
-            // Render mesh
             Mesh* mesh = obj->getMesh();
             if (mesh) {
                 mesh->RenderMesh();
             }
 
-            // Disable alpha blending after rendering if it was enabled
             if (material->hasAlpha()) {
                 glDisable(GL_BLEND);
             }
